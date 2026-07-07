@@ -13,7 +13,7 @@ START_TIME = time.time()
 TIMEOUT = 5 * 60 * 60 + 50 * 60  # 5 Hours 50 Minutes (Keeps 10 min buffer before GitHub Actions 6h timeout)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🤖 Bot active hai GitHub Actions par! Mujhe YouTube link bhejiye.")
+    await update.message.reply_text("🤖 Bot active hai! Mujhe YouTube link bhejiye, main aapke liye video download karke de dunga.")
 
 async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if time.time() - START_TIME > TIMEOUT:
@@ -34,12 +34,10 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
         'no_warnings': True,
         'concurrent_fragment_downloads': 5, # High speed multi-threaded download
         'buffersize': 1024 * 16, # Optimized buffer size for faster networking
-        'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        },
         'extractor_args': {
             'youtube': {
-                'player_client': ['ios', 'android']
+                'player-client': ['tvhtml5', 'ios', 'web_embedded', 'mweb'],
+                'player_client': ['tvhtml5', 'ios', 'web_embedded', 'mweb']
             }
         }
     }

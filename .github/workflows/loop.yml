@@ -24,7 +24,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install python-telegram-bot==20.8
-          pip install --upgrade --no-deps --force-reinstall https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz
+          pip install --upgrade --force-reinstall https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz
 
       - name: Run Bot (Will run for 5h 50m)
         env:

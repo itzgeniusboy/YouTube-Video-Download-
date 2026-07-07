@@ -160,8 +160,7 @@ async function startTelegramBot(token: string) {
           "--max-filesize", "2048M",
           "--concurrent-fragments", "5",
           "--buffersize", "16K",
-          "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "--extractor-args", "youtube:player-client=ios,tvhtml5",
+          "--extractor-args", "youtube:player-client=tvhtml5,web_embedded,ios,mweb",
           "--no-warnings",
           "-o", outputPath
         ]);
@@ -346,8 +345,7 @@ app.post("/api/test-download", async (req, res) => {
       "--max-filesize", "2048M",
       "--concurrent-fragments", "5",
       "--buffersize", "16K",
-      "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      "--extractor-args", "youtube:player-client=ios,tvhtml5",
+      "--extractor-args", "youtube:player-client=tvhtml5,web_embedded,ios,mweb",
       "--no-warnings",
       "-o", outputPath
     ]);
