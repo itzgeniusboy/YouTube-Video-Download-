@@ -1,0 +1,35 @@
+name: 24x7 YT Bot Loop
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [restart_bot]
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install python-telegram-bot==20.8 yt-dlp
+
+      - name: Run Bot (Will run for 5h 50m)
+        run: |
+          python bot.py
+
+      - name: Trigger Next Loop (Self Restart)
+        if: always()
+        run: |
+          curl -X POST \
+               -H "Authorization: token ${{ secrets.GH_PAT }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               -d '{"event_type": "restart_bot"}' \
+               https://api.github.com/repos/${{ github.repository }}/dispatches
