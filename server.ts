@@ -157,7 +157,9 @@ async function startTelegramBot(token: string) {
         await ytDlp.execPromise([
           text,
           "-f", "best[ext=mp4]/best",
-          "--max-filesize", "1024M",
+          "--max-filesize", "2048M",
+          "--concurrent-fragments", "5",
+          "--buffersize", "16K",
           "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
           "--extractor-args", "youtube:player-client=ios,tvhtml5",
           "--no-warnings",
@@ -165,15 +167,15 @@ async function startTelegramBot(token: string) {
         ]);
 
         if (!fs.existsSync(outputPath)) {
-          throw new Error("Downloaded file not found. It may have exceeded the 1GB size limit.");
+          throw new Error("Downloaded file not found. It may have exceeded the 2GB size limit.");
         }
 
         const stats = fs.statSync(outputPath);
         const fileSizeMB = stats.size / (1024 * 1024);
 
-        if (fileSizeMB > 1024) {
+        if (fileSizeMB > 2048) {
           fs.unlinkSync(outputPath);
-          throw new Error(`Video size (${fileSizeMB.toFixed(1)}MB) exceeds the 1GB download limit.`);
+          throw new Error(`Video size (${fileSizeMB.toFixed(1)}MB) exceeds the 2GB download limit.`);
         }
 
         addLog("Bot", `Uploading video file (${fileSizeMB.toFixed(1)}MB) to Telegram chat...`);
@@ -341,7 +343,9 @@ app.post("/api/test-download", async (req, res) => {
     await ytDlp.execPromise([
       url,
       "-f", "best[ext=mp4]/best",
-      "--max-filesize", "1024M",
+      "--max-filesize", "2048M",
+      "--concurrent-fragments", "5",
+      "--buffersize", "16K",
       "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
       "--extractor-args", "youtube:player-client=ios,tvhtml5",
       "--no-warnings",
@@ -349,7 +353,7 @@ app.post("/api/test-download", async (req, res) => {
     ]);
 
     if (!fs.existsSync(outputPath)) {
-      throw new Error("File not written. Video might be too large (>1GB).");
+      throw new Error("File not written. Video might be too large (>2GB).");
     }
 
     const stats = fs.statSync(outputPath);

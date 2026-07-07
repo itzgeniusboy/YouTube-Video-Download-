@@ -178,7 +178,7 @@ export default function App() {
       if (response.ok) {
         setTestResult(data);
       } else {
-        setTestError(data.error || "Failed to download video. Ensure size is under 1GB.");
+        setTestError(data.error || "Failed to download video. Ensure size is under 2GB.");
       }
     } catch (err: any) {
       setTestError(err.message || "An unexpected server error occurred during test.");
@@ -217,9 +217,11 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ydl_opts = {
         'format': 'best[ext=mp4]/best',
         'outtmpl': 'video.mp4',
-        'max_filesize': 1024 * 1024 * 1024, # Up to 1GB (Note: Standard Telegram bots have a 50MB upload limit)
+        'max_filesize': 2048 * 1024 * 1024, # Up to 2GB (Note: Standard Telegram bots have a 50MB upload limit)
         'quiet': True,
         'no_warnings': True,
+        'concurrent_fragment_downloads': 5, # High speed multi-threaded download
+        'buffersize': 1024 * 16, # Optimized buffer size for faster networking
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         },
@@ -544,7 +546,7 @@ jobs:
                   <div className="text-xs text-slate-500 bg-indigo-50/50 rounded-xl p-3.5 border border-indigo-100/40 flex items-start gap-2">
                     <Compass className="w-4 h-4 text-indigo-600 mt-0.5 shrink-0" />
                     <p className="leading-relaxed">
-                      This bot token runs locally inside this Cloud Run workspace. The download engine supports files up to <strong className="text-indigo-900">1GB</strong>. Note that standard Telegram bots have an upload limit of 50MB.
+                      This bot token runs locally inside this Cloud Run workspace. The download engine supports files up to <strong className="text-indigo-900">2GB</strong>. Note that standard Telegram bots have an upload limit of 50MB.
                     </p>
                   </div>
                 </div>
@@ -569,7 +571,7 @@ jobs:
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-slate-700">Platform Limit:</span>
                     <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                      1.0 GB Max
+                      2.0 GB Max
                     </span>
                   </div>
                 </div>

@@ -29,9 +29,11 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ydl_opts = {
         'format': 'best[ext=mp4]/best',
         'outtmpl': 'video.mp4',
-        'max_filesize': 1024 * 1024 * 1024, # Up to 1GB
+        'max_filesize': 2048 * 1024 * 1024, # Up to 2GB
         'quiet': True,
         'no_warnings': True,
+        'concurrent_fragment_downloads': 5, # High speed multi-threaded download
+        'buffersize': 1024 * 16, # Optimized buffer size for faster networking
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         },
