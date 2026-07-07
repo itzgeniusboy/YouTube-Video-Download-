@@ -1,0 +1,6 @@
+{
+  "name": "YouTube Downloader Telegram Bot",
+  "description": "A Telegram Bot that downloads YouTube videos up to 50MB and sends them directly to you. Includes a dashboard to view bot status, configuration, and activity logs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
