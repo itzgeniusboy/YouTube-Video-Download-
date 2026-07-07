@@ -29,7 +29,7 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ydl_opts = {
         'format': 'best[ext=mp4]/best',
         'outtmpl': 'video.mp4',
-        'max_filesize': 50 * 1024 * 1024, # Telegram bot limit 50MB
+        'max_filesize': 1024 * 1024 * 1024, # Up to 1GB
         'quiet': True
     }
 
@@ -42,7 +42,11 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
         os.remove('video.mp4')
         await status_msg.delete()
     except Exception as e:
-        await status_msg.edit_text("❌ Error: Video 50MB se badi ho sakti hai ya koi temporary issue hai.")
+        error_msg = str(e)
+        if "Request Entity Too Large" in error_msg or "too large" in error_msg.lower():
+            await status_msg.edit_text("❌ Error: Video size 50MB se badi hai. Standard Telegram bots sirf 50MB tak hi upload support karte hain.")
+        else:
+            await status_msg.edit_text(f"❌ Error: Video process karne me dikkat aayi.\nDetails: {error_msg[:100]}")
         if os.path.exists('video.mp4'): os.remove('video.mp4')
 
 async def check_timer(application):

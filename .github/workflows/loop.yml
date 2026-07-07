@@ -1,6 +1,10 @@
 name: 24x7 YT Bot Loop
 
 on:
+  push:
+    branches:
+      - main
+      - master
   workflow_dispatch:
   repository_dispatch:
     types: [restart_bot]
@@ -22,6 +26,8 @@ jobs:
           pip install python-telegram-bot==20.8 yt-dlp
 
       - name: Run Bot (Will run for 5h 50m)
+        env:
+          TELEGRAM_TOKEN: "8915773306:AAGoZFbLmQSda42D9kMCj5q7OKCruseYgQQ"
         run: |
           python bot.py
 

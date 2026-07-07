@@ -178,7 +178,7 @@ export default function App() {
       if (response.ok) {
         setTestResult(data);
       } else {
-        setTestError(data.error || "Failed to download video. Ensure size is under 50MB.");
+        setTestError(data.error || "Failed to download video. Ensure size is under 1GB.");
       }
     } catch (err: any) {
       setTestError(err.message || "An unexpected server error occurred during test.");
@@ -217,7 +217,7 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ydl_opts = {
         'format': 'best[ext=mp4]/best',
         'outtmpl': 'video.mp4',
-        'max_filesize': 50 * 1024 * 1024, # Telegram limits uploads to 50MB
+        'max_filesize': 1024 * 1024 * 1024, # Up to 1GB (Note: Standard Telegram bots have a 50MB upload limit)
         'quiet': True
     }
 
@@ -230,7 +230,11 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
         os.remove('video.mp4')
         await status_msg.delete()
     except Exception as e:
-        await status_msg.edit_text("❌ Error: Video 50MB se badi ho sakti hai ya koi temporary issue hai.")
+        error_msg = str(e)
+        if "Request Entity Too Large" in error_msg or "too large" in error_msg.lower():
+            await status_msg.edit_text("❌ Error: Video size 50MB se badi hai. Standard Telegram bots sirf 50MB tak hi upload support karte hain.")
+        else:
+            await status_msg.edit_text(f"❌ Error: Video process karne me dikkat aayi.\\nDetails: {error_msg[:100]}")
         if os.path.exists('video.mp4'): os.remove('video.mp4')
 
 async def check_timer(application):
@@ -531,7 +535,7 @@ jobs:
                   <div className="text-xs text-slate-500 bg-indigo-50/50 rounded-xl p-3.5 border border-indigo-100/40 flex items-start gap-2">
                     <Compass className="w-4 h-4 text-indigo-600 mt-0.5 shrink-0" />
                     <p className="leading-relaxed">
-                      This bot token runs locally inside this Cloud Run workspace. Telegram limits video uploads to <strong className="text-indigo-900">50MB</strong> for bots.
+                      This bot token runs locally inside this Cloud Run workspace. The download engine supports files up to <strong className="text-indigo-900">1GB</strong>. Note that standard Telegram bots have an upload limit of 50MB.
                     </p>
                   </div>
                 </div>
@@ -556,7 +560,7 @@ jobs:
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-slate-700">Platform Limit:</span>
                     <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                      50.0 MB Max
+                      1.0 GB Max
                     </span>
                   </div>
                 </div>

@@ -157,20 +157,20 @@ async function startTelegramBot(token: string) {
         await ytDlp.execPromise([
           text,
           "-f", "best[ext=mp4]/best",
-          "--max-filesize", "50M",
+          "--max-filesize", "1024M",
           "-o", outputPath
         ]);
 
         if (!fs.existsSync(outputPath)) {
-          throw new Error("Downloaded file not found. It may have exceeded the 50MB size limit.");
+          throw new Error("Downloaded file not found. It may have exceeded the 1GB size limit.");
         }
 
         const stats = fs.statSync(outputPath);
         const fileSizeMB = stats.size / (1024 * 1024);
 
-        if (fileSizeMB > 50) {
+        if (fileSizeMB > 1024) {
           fs.unlinkSync(outputPath);
-          throw new Error(`Video size (${fileSizeMB.toFixed(1)}MB) exceeds Telegram's 50MB bot limit.`);
+          throw new Error(`Video size (${fileSizeMB.toFixed(1)}MB) exceeds the 1GB download limit.`);
         }
 
         addLog("Bot", `Uploading video file (${fileSizeMB.toFixed(1)}MB) to Telegram chat...`);
@@ -338,12 +338,12 @@ app.post("/api/test-download", async (req, res) => {
     await ytDlp.execPromise([
       url,
       "-f", "best[ext=mp4]/best",
-      "--max-filesize", "50M",
+      "--max-filesize", "1024M",
       "-o", outputPath
     ]);
 
     if (!fs.existsSync(outputPath)) {
-      throw new Error("File not written. Video might be too large (>50MB).");
+      throw new Error("File not written. Video might be too large (>1GB).");
     }
 
     const stats = fs.statSync(outputPath);
