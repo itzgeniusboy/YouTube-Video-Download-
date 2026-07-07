@@ -37,7 +37,7 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
         },
         'extractor_args': {
             'youtube': {
-                'player_client': ['web', 'mweb', 'android']
+                'player_client': ['ios', 'tvhtml5']
             }
         }
     }
